@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メンタリスト - みんなで解決するAI相談所</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e1b4b;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, var(--dark) 0%, #312e81 100%);
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 65px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 5px;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+            color: #fff;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary) 0%, #34d399 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 65px;
+            min-height: calc(100vh - 65px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, #312e81 50%, var(--primary) 100%);
+            padding: 60px 20px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 18px 25px;
+            padding-right: 120px;
+            border-radius: 15px;
+            border: none;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 12px 25px;
+        }
+
+        /* Categories */
+        .categories-section {
+            padding: 50px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--gray-900);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .category-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 5px;
+        }
+
+        .category-count {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        /* Threads Section */
+        .threads-section {
+            padding: 0 20px 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .threads-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        .thread-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .thread-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .thread-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .thread-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .thread-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .thread-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        .thread-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-open {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-progress {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-solved {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .status-premium {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #b45309;
+        }
+
+        .thread-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: var(--gray-100);
+            color: var(--gray-600);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .thread-description {
+            color: var(--gray-600);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .thread-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .thread-participants {
+            display: flex;
+            align-items: center;
+        }
+
+        .participant-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            margin-left: -10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .participant-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .participant-count {
+            margin-left: 10px;
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        .thread-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .sidebar-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mentor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .mentor-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mentor-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .mentor-info {
+            flex: 1;
+        }
+
+        .mentor-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .mentor-specialty {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+
+        .mentor-badge {
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-pro {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #fff;
+        }
+
+        .badge-volunteer {
+            background: var(--secondary);
+            color: #fff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: var(--gray-100);
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 25px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.4rem;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--gray-100);
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: var(--gray-200);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid var(--gray-200);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-hint {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            margin-top: 5px;
+        }
+
+        .form-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .form-tag {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--gray-200);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .form-tag:hover {
+            border-color: var(--primary);
+        }
+
+        .form-tag.selected {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        /* Thread Detail Modal */
+        .thread-detail-header {
+            background: linear-gradient(135deg, var(--dark) 0%, #312e81 100%);
+            color: #fff;
+            padding: 30px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .thread-detail-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .thread-detail-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .thread-detail-body {
+            padding: 30px;
+        }
+
+        .thread-description-full {
+            background: var(--gray-100);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .thread-actions-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .comments-section h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comment {
+            display: flex;
+            gap: 15px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .comment-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+        }
+
+        .comment-time {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+
+        .comment-text {
+            color: var(--gray-700);
+            margin-bottom: 10px;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .comment-action {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .comment-action:hover {
+            color: var(--primary);
+        }
+
+        .comment-input-section {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .comment-input-section input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--gray-200);
+            font-size: 1rem;
+        }
+
+        /* Project Section */
+        .project-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .project-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .github-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-700);
+            text-decoration: none;
+            padding: 8px 15px;
+            background: #fff;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .github-link:hover {
+            background: var(--gray-100);
+        }
+
+        .project-progress {
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: var(--gray-200);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        /* Premium Section */
+        .premium-card {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .premium-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .premium-icon {
+            font-size: 1.5rem;
+        }
+
+        .premium-title {
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .premium-description {
+            color: #78350f;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .premium-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #fff;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(150%);
+            transition: all 0.3s;
+            z-index: 3000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .notification-success {
+            background: #dcfce7;
+        }
+
+        .notification-content h4 {
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .notification-content p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .threads-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .thread-detail-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .categories-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .category-card {
+                padding: 15px;
+            }
+
+            .category-icon {
+                font-size: 2rem;
+            }
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 5px;
+            background: var(--gray-100);
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Filter Pills */
+        .filter-pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-pill {
+            padding: 8px 18px;
+            border-radius: 20px;
+            background: #fff;
+            border: 2px solid var(--gray-200);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .filter-pill:hover, .filter-pill.active {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🧠</div>
+                <span>メンタリスト</span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="#" class="nav-link active">ホーム</a>
+                <a href="#" class="nav-link">探す</a>
+                <a href="#" class="nav-link">コミュニティ</a>
+                <a href="#" class="nav-link">プロジェクト</a>
+                <a href="#" class="nav-link">メンター</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="btn btn-secondary" onclick="openCreateModal()">
+                    ✨ 相談を投稿
+                </button>
+                <div class="user-avatar" onclick="toggleUserMenu()">T</div>
+            </div>
+            
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>🤝 みんなで解決する、新しい相談所</h1>
+            <p>プログラミング、デザイン、ビジネス、人生相談まで。世界中のメンターと一緒に問題を解決しよう。</p>
+            
+            <div class="search-box">
+                <input type="text" placeholder="どんな問題を解決したいですか？" id="searchInput">
+                <button class="btn btn-primary">検索</button>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="categories-section">
+            <div class="section-header">
+                <h2 class="section-title">🎯 カテゴリから探す</h2>
+                <a href="#" class="btn btn-outline">すべて見る</a>
+            </div>
+            
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Categories will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- Threads Section -->
+        <section class="threads-section">
+            <div class="section-header">
+                <h2 class="section-title">🔥 注目の相談・プロジェクト</h2>
+            </div>
+
+            <div class="filter-pills">
+                <span class="filter-pill active" data-filter="all">すべて</span>
+                <span class="filter-pill" data-filter="open">募集中</span>
+                <span class="filter-pill" data-filter="progress">進行中</span>
+                <span class="filter-pill" data-filter="solved">解決済み</span>
+                <span class="filter-pill" data-filter="premium">プレミアム</span>
+            </div>
+            
+            <div class="threads-container">
+                <div class="thread-list" id="threadList">
+                    <!-- Threads will be populated by JS -->
+                </div>
+
+                <aside class="sidebar">
+                    <!-- Top Mentors -->
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">👑 トップメンター</h3>
+                        <div class="mentor-list" id="mentorList">
+                            <!-- Mentors will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">📊 コミュニティ統計</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">12,847</div>
+                                <div class="stat-label">相談件数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">8,234</div>
+                                <div class="stat-label">解決済み</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">3,456</div>
+                                <div class="stat-label">メンター</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">156</div>
+                                <div class="stat-label">プロジェクト</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">⚡ クイックアクション</h3>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="btn btn-primary" style="width: 100%;" onclick="openCreateModal()">
+                                ✨ 新しい相談を投稿
+                            </button>
+                            <button class="btn btn-success" style="width: 100%;" onclick="openProjectModal()">
+                                🚀 プロジェクトを作成
+                            </button>
+                            <button class="btn btn-outline" style="width: 100%;">
+                                🤝 メンターになる
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <!-- Create Thread Modal -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>✨ 新しい相談を投稿</h2>
+                <button class="modal-close" onclick="closeCreateModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">タイトル</label>
+                    <input type="text" class="form-input" placeholder="どんな問題を解決したいですか？" id="threadTitle">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">カテゴリ</label>
+                    <select class="form-select" id="threadCategory">
+                        <option value="">選択してください</option>
+                        <option value="programming">💻 プログラミング</option>
+                        <option value="design">🎨 デザイン</option>
+                        <option value="business">💼 ビジネス</option>
+                        <option value="career">📈 キャリア</option>
+                        <option value="life">🌱 人生相談</option>
+                        <option value="study">📚 学習・勉強</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">詳細</label>
+                    <textarea class="form-textarea" placeholder="問題の詳細を教えてください。具体的であるほど、良いアドバイスが得られます。" id="threadDescription"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">タグ</label>
+                    <div class="form-tags" id="tagContainer">
+                        <span class="form-tag" data-tag="JavaScript">JavaScript</span>
+                        <span class="form-tag" data-tag="Python">Python</span>
+                        <span class="form-tag" data-tag="React">React</span>
+                        <span class="form-tag" data-tag="初心者">初心者</span>
+                        <span class="form-tag" data-tag="緊急">緊急</span>
+                        <span class="form-tag" data-tag="チーム募集">チーム募集</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">投稿タイプ</label>
+                    <div class="tabs">
+                        <div class="tab active" data-type="question">💬 質問</div>
+                        <div class="tab" data-type="project">🚀 プロジェクト</div>
+                        <div class="tab" data-type="premium">👑 プレミアム</div>
+                    </div>
+                    <p class="form-hint">プレミアムを選択すると、有料でプロフェッショナルに相談できます。</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeCreateModal()">キャンセル</button>
+                <button class="btn btn-primary" onclick="createThread()">投稿する</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thread Detail Modal -->
+    <div class="modal-overlay" id="threadDetailModal">
+        <div class="modal" style="max-width: 900px;">
+            <div class="thread-detail-header">
+                <button class="modal-close" onclick="closeThreadDetail()" style="position: absolute; right: 20px; top: 20px; background: rgba(255,255,255,0.2);">×</button>
+                <div class="thread-status status-open" id="detailStatus">募集中</div>
+                <h2 class="thread-detail-title" id="detailTitle">React Hooksの使い方がわからない</h2>
+                <div class="thread-detail-meta">
+                    <span>👤 投稿者: <strong id="detailAuthor">田中太郎</strong></span>
+                    <span>📅 <span id="detailDate">2024年1月15日</span></span>
+                    <span>👁 <span id="detailViews">1,234</span> views</span>
+                    <span>💬 <span id="detailCommentCount">23</span> コメント</span>
+                </div>
+            </div>
+            <div class="thread-detail-body">
+                <!-- Project Card (if applicable) -->
+                <div class="project-card" id="projectSection" style="display: none;">
+                    <div class="project-header">
+                        <span class="project-type">🚀 オープンプロジェクト</span>
+                        <a href="#" class="github-link">
+                            <span>📦</span> GitHub で見る
+                        </a>
+                    </div>
+                    <p>このプロジェクトは誰でも参加可能です。一緒に問題を解決しましょう！</p>
+                    <div class="project-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%;"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>進捗: 65%</span>
+                            <span>参加者: 8人</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium Card (if applicable) -->
+                <div class="premium-card" id="premiumSection" style="display: none;">
+                    <div class="premium-header">
+                        <span class="premium-icon">👑</span>
+                        <span class="premium-title">プレミアム相談</span>
+                    </div>
+                    <p class="premium-description">この相談はプロフェッショナルへの有料相談が可能です。確実な解決をお約束します。</p>
+                    <p class="premium-price">¥5,000 〜</p>
+                    <button class="btn btn-success">🎯 プロに相談する</button>
+                </div>
+
+                <div class="thread-description-full" id="detailDescription">
+                    useStateとuseEffectの違いがよくわかりません。特に、依存配列の使い方が難しいです。
+                    実際のプロジェクトでの使い方を教えていただけると助かります。
+                </div>
+
+                <div class="thread-actions-bar">
+                    <button class="btn btn-primary">🙋 参加する</button>
+                    <button class="btn btn-outline">⭐ ブックマーク</button>
+                    <button class="btn btn-outline">📤 シェア</button>
+                    <button class="btn btn-outline">🔔 通知ON</button>
+                </div>
+
+                <div class="comments-section">
+                    <h3>💬 コメント・回答 <span id="commentsCount">(23)</span></h3>
+                    
+                    <div id="commentsList">
+                        <!-- Comments will be populated by JS -->
+                    </div>
+
+                    <div class="comment-input-section">
+                        <input type="text" placeholder="コメントを入力..." id="commentInput">
+                        <button class="btn btn-primary" onclick="addComment()">送信</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon notification-success">✓</div>
+        <div class="notification-content">
+            <h4 id="notificationTitle">投稿完了</h4>
+            <p id="notificationMessage">相談が投稿されました！</p>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const categories = [
+            { id: 'programming', icon: '💻', name: 'プログラミング', count: 3456 },
+            { id: 'design', icon: '🎨', name: 'デザイン', count: 1234 },
+            { id: 'business', icon: '💼', name: 'ビジネス', count: 2341 },
+            { id: 'career', icon: '📈', name: 'キャリア', count: 1876 },
+            { id: 'life', icon: '🌱', name: '人生相談', count: 2134 },
+            { id: 'study', icon: '📚', name: '学習・勉強', count: 1543 },
+            { id: 'health', icon: '💪', name: '健康・運動', count: 876 },
+            { id: 'creative', icon: '✨', name: 'クリエイティブ', count: 654 }
+        ];
+
+        const threads = [
+            {
+                id: 1,
+                title: 'React Hooksの使い方がわからない - useEffectの依存配列について',
+                category: 'programming',
+                status: 'open',
+                description: 'useStateとuseEffectの違いがよくわかりません。特に、依存配列の使い方が難しいです。実際のプロジェクトでの使い方を教えていただけると助かります。',
+                tags: ['React', 'JavaScript', '初心者'],
+                author: '田中太郎',
+                participants: 5,
+                comments: 23,
+                views: 1234,
+                date: '2時間前',
+                isProject: false,
+                isPremium: false
+            },
+            {
+                id: 2,
+                title: '【チーム募集】オープンソースのタスク管理アプリを作りたい',
+                category: 'programming',
+                status: 'progress',
+                description: 'Next.js + Supabaseでタスク管理アプリを開発中です。フロントエンド、バックエンド、デザイナーを募集しています。初心者歓迎！',
+                tags: ['Next.js', 'Supabase', 'チーム募集', 'OSS'],
+                author: '山田花子',
+                participants: 8,
+                comments: 45,
+                views: 2341,
+                date: '5時間前',
+                isProject: true,
+                isPremium: false
+            },
+            {
+                id: 3,
+                title: '起業したいがビジネスモデルの作り方がわからない',
+                category: 'business',
+                status: 'open',
+                description: 'IT系のスタートアップを考えています。アイデアはあるのですが、収益化の方法やビジネスモデルキャンバスの書き方がわかりません。',
+                tags: ['起業', 'スタートアップ', 'ビジネスモデル'],
+                author: '佐藤健',
+                participants: 3,
+                comments: 12,
+                views: 876,
+                date: '1日前',
+                isProject: false,
+                isPremium: false
+            },
+            {
+                id: 4,
+                title: '【プレミアム】大規模Webアプリのアーキテクチャ設計を相談したい',
+                category: 'programming',
+                status: 'premium',
+                description: '月間100万PVのWebサービスを設計中です。マイクロサービス化、キャッシュ戦略、CI/CDパイプラインについてプロに相談したいです。',
+                tags: ['アーキテクチャ', 'AWS', 'マイクロサービス', '緊急'],
+                author: '鈴木一郎',
+                participants: 2,
+                comments: 8,
+                views: 543,
+                date: '3時間前',
+                isProject: false,
+                isPremium: true
+            },
+            {
+                id: 5,
+                title: 'UIデザインのフィードバックが欲しい - ポートフォリオサイト',
+                category: 'design',
+                status: 'solved',
+                description: 'ポートフォリオサイトを作成しました。配色、レイアウト、UXについてフィードバックいただけると嬉しいです。',
+                tags: ['UI/UX', 'Figma', 'ポートフォリオ'],
+                author: '高橋美咲',
+                participants: 12,
+                comments: 34,
+                views: 1876,
+                date: '2日前',
+                isProject: false,
+                isPremium: false
+            }
+        ];
+
+        const mentors = [
+            { name: '山本隆', specialty: 'フルスタック開発', color: '#6366f1', isPro: true, solved: 234 },
+            { name: '伊藤恵', specialty: 'UI/UXデザイン', color: '#ec4899', isPro: true, solved: 189 },
+            { name: '渡辺誠', specialty: 'ビジネス戦略', color: '#f59e0b', isPro: false, solved: 156 },
+            { name: '中村あい', specialty: 'キャリアコーチ', color: '#10b981', isPro: false, solved: 143 },
+            { name: '小林大輔', specialty: 'クラウド/DevOps', color: '#3b82f6', isPro: true, solved: 128 }
+        ];
+
+        const comments = [
+            {
+                id: 1,
+                author: '山本隆',
+                text: 'useEffectの依存配列について説明しますね。依存配列は「この値が変わったときだけ実行する」という指定です。空配列[]だとマウント時のみ、何も指定しないと毎回実行されます。',
+                time: '1時間前',
+                likes: 15,
+                color: '#6366f1',
+                isPro: true
+            },
+            {
+                id: 2,
+                author: '佐藤花子',
+                text: 'わかりやすい説明ありがとうございます！実際にコード例も見せていただけると嬉しいです。',
+                time: '45分前',
+                likes: 3,
+                color: '#ec4899',
+                isPro: false
+            },
+            {
+                id: 3,
+                author: '山本隆',
+                text: '例えば、ユーザーIDが変わったときだけAPIを叩きたい場合は useEffect(() => { fetchUser(userId); }, [userId]); のように書きます。',
+                time: '30分前',
+                likes: 8,
+                color: '#6366f1',
+                isPro: true
+            }
+        ];
+
+        let selectedTags = [];
+        let selectedCategory = null;
+        let currentThread = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderThreads();
+            renderMentors();
+            setupEventListeners();
+        });
+
+        function renderCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            grid.innerHTML = categories.map(cat => `
+                <div class="category-card" data-category="${cat.id}" onclick="selectCategory('${cat.id}')">
+                    <div class="category-icon">${cat.icon}</div>
+                    <div class="category-name">${cat.name}</div>
+                    <div class="category-count">${cat.count.toLocaleString()} 相談</div>
+                </div>
+            `).join('');
+        }
+
+        function renderThreads(filter = 'all') {
+            const list = document.getElementById('threadList');
+            let filteredThreads = threads;
+
+            if (filter !== 'all') {
+                filteredThreads = threads.filter(t => {
+                    if (filter === 'premium') return t.isPremium;
+                    return t.status === filter;
+                });
+            }
+
+            if (selectedCategory) {
+                filteredThreads = filteredThreads.filter(t => t.category === selectedCategory);
+            }
+
+            list.innerHTML = filteredThreads.map(thread => `
+                <div class="thread-card" onclick="openThreadDetail(${thread.id})">
+                    <div class="thread-header">
+                        <div>
+                            <h3 class="thread-title">${thread.title}</h3>
+                            <div class="thread-meta">
+                                <span>👤 ${thread.author}</span>
+                                <span>📅 ${thread.date}</span>
+                            </div>
+                        </div>
+                        <span class="thread-status ${getStatusClass(thread)}">${getStatusText(thread)}</span>
+                    </div>
+                    <div class="thread-tags">
+                        ${thread.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <p class="thread-description">${thread.description}</p>
+                    <div class="thread-footer">
+                        <div class="thread-participants">
+                            ${generateAvatars(thread.participants)}
+                            <span class="participant-count">+${thread.participants}人が参加</span>
+                        </div>
+                        <div class="thread-stats">
+                            <span>💬 ${thread.comments}</span>
+                            <span>👁 ${thread.views}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusClass(thread) {
+            if (thread.isPremium) return 'status-premium';
+            const classes = {
+                'open': 'status-open',
+                'progress': 'status-progress',
+                'solved': 'status-solved'
+            };
+            return classes[thread.status] || 'status-open';
+        }
+
+        function getStatusText(thread) {
+            if (thread.isPremium) return '👑 プレミアム';
+            const texts = {
+                'open': '募集中',
+                'progress': '進行中',
+                'solved': '✓ 解決済み'
+            };
+            return texts[thread.status] || '募集中';
+        }
+
+        function generateAvatars(count) {
+            const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
+            let html = '';
+            const show = Math.min(count, 4);
+            for (let i = 0; i < show; i++) {
+                html += `<div class="participant-avatar" style="background: ${colors[i % colors.length]};">
+                    ${String.fromCharCode(65 + i)}
+                </div>`;
+            }
+            return html;
+        }
+
+        function renderMentors() {
+            const list = document.getElementById('mentorList');
+            list.innerHTML = mentors.map(mentor => `
+                <div class="mentor-item">
+                    <div class="mentor-avatar" style="background: ${mentor.color};">
+                        ${mentor.name.charAt(0)}
+                    </div>
+                    <div class="mentor-info">
+                        <div class="mentor-name">${mentor.name}</div>
+                        <div class="mentor-specialty">${mentor.specialty}</div>
+                    </div>
+                    <span class="mentor-badge ${mentor.isPro ? 'badge-pro' : 'badge-volunteer'}">
+                        ${mentor.isPro ? 'PRO' : 'ボランティア'}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function setupEventListeners() {
+            // Filter pills
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    renderThreads(pill.dataset.filter);
+                });
+            });
+
+            // Tags
+            document.querySelectorAll('.form-tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    tag.classList.toggle('selected');
+                    const tagValue = tag.dataset.tag;
+                    if (selectedTags.includes(tagValue)) {
+                        selectedTags = selectedTags.filter(t => t !== tagValue);
+                    } else {
+                        selectedTags.push(tagValue);
+                    }
+                });
+            });
+
+            // Tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                });
+            });
+        }
+
+        function selectCategory(categoryId) {
+            const cards = document.querySelectorAll('.category-card');
+            cards.forEach(card => {
+                if (card.dataset.category === categoryId) {
+                    card.classList.toggle('selected');
+                    selectedCategory = card.classList.contains('selected') ? categoryId : null;
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+            renderThreads(document.querySelector('.filter-pill.active')?.dataset.filter || 'all');
+        }
+
+        // Modal Functions
+        function openCreateModal() {
+            document.getElementById('createModal').classList.add('active');
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.remove('active');
+        }
+
+        function openThreadDetail(threadId) {
+            currentThread = threads.find(t => t.id === threadId);
+            if (!currentThread) return;
+
+            document.getElementById('detailTitle').textContent = currentThread.title;
+            document.getElementById('detailAuthor').textContent = currentThread.author;
+            document.getElementById('detailDate').textContent = currentThread.date;
+            document.getElementById('detailViews').textContent = currentThread.views;
+            document.getElementById('detailCommentCount').textContent = currentThread.comments;
+            document.getElementById('detailDescription').textContent = currentThread.description;
+            
+            const statusEl = document.getElementById('detailStatus');
+            statusEl.className = `thread-status ${getStatusClass(currentThread)}`;
+            statusEl.textContent = getStatusText(currentThread);
+
+            // Show/hide project section
+            document.getElementById('projectSection').style.display = currentThread.isProject ? 'block' : 'none';
+            
+            // Show/hide premium section
+            document.getElementById('premiumSection').style.display = currentThread.isPremium ? 'block' : 'none';
+
+            renderComments();
+            document.getElementById('threadDetailModal').classList.add('active');
+        }
+
+        function closeThreadDetail() {
+            document.getElementById('threadDetailModal').classList.remove('active');
+        }
+
+        function renderComments() {
+            const list = document.getElementById('commentsList');
+            list.innerHTML = comments.map(comment => `
+                <div class="comment">
+                    <div class="comment-avatar" style="background: ${comment.color};">
+                        ${comment.author.charAt(0)}
+                    </div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author}</span>
+                            ${comment.isPro ? '<span class="mentor-badge badge-pro" style="font-size: 0.7rem;">PRO</span>' : ''}
+                            <span class="comment-time">${comment.time}</span>
+                        </div>
+                        <p class="comment-text">${comment.text}</p>
+                        <div class="comment-actions">
+                            <span class="comment-action">👍 ${comment.likes}</span>
+                            <span class="comment-action">💬 返信</span>
+                            <span class="comment-action">🚩 報告</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function createThread() {
+            const title = document.getElementById('threadTitle').value;
+            const category = document.getElementById('threadCategory').value;
+            const description = document.getElementById('threadDescription').value;
+
+            if (!title || !category || !description) {
+                showNotification('入力エラー', '全ての項目を入力してください', false);
+                return;
+            }
+
+            // Add new thread
+            const newThread = {
+                id: threads.length + 1,
+                title,
+                category,
+                status: 'open',
+                description,
+                tags: selectedTags,
+                author: 'あなた',
+                participants: 0,
+                comments: 0,
+                views: 0,
+                date: 'たった今',
+                isProject: document.querySelector('.tab.active')?.dataset.type === 'project',
+                isPremium: document.querySelector('.tab.active')?.dataset.type === 'premium'
+            };
+
+            threads.unshift(newThread);
+            renderThreads();
+            closeCreateModal();
+            showNotification('投稿完了', '相談が投稿されました！');
+
+            // Reset form
+            document.getElementById('threadTitle').value = '';
+            document.getElementById('threadCategory').value = '';
+            document.getElementById('threadDescription').value = '';
+            selectedTags = [];
+            document.querySelectorAll('.form-tag').forEach(t => t.classList.remove('selected'));
+        }
+
+        function addComment() {
+            const input = document.getElementById('commentInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+
+            const newComment = {
+                id: comments.length + 1,
+                author: 'あなた',
+                text,
+                time: 'たった今',
+                likes: 0,
+                color: '#10b981',
+                isPro: false
+            };
+
+            comments.push(newComment);
+            renderComments();
+            input.value = '';
+            showNotification('コメント投稿', 'コメントが投稿されました！');
+        }
+
+        function showNotification(title, message, success = true) {
+            const notification = document.getElementById('notification');
+            document.getElementById('notificationTitle').textContent = title;
+            document.getElementById('notificationMessage').textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function toggleUserMenu() {
+            // User menu logic
+            showNotification('ようこそ', 'メンタリストへようこそ！');
+        }
+
+        function openProjectModal() {
+            openCreateModal();
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.tab[data-type="project"]').classList.add('active');
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                const query = e.target.value.toLowerCase();
+                const filtered = threads.filter(t => 
+                    t.title.toLowerCase().includes(query) || 
+                    t.description.toLowerCase().includes(query) ||
+                    t.tags.some(tag => tag.toLowerCase().includes(query))
+                );
+                
+                const list = document.getElementById('threadList');
+                if (filtered.length === 0) {
+                    list.innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;">検索結果がありません</div>';
+                } else {
+                    // Temporarily replace threads for rendering
+                    const originalThreads = [...threads];
+                    threads.length = 0;
+                    threads.push(...filtered);
+                    renderThreads();
+                    threads.length = 0;
+                    threads.push(...originalThreads);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
